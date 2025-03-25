@@ -10,10 +10,10 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="calenda">
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} options={{headerShown:false}}/>
         <Stack.Screen name="calenda" component={CalendarScreen} options={{headerShown:false}}/>
-      </Stack.Navigator>
+      </Stack.Navigator> 
     </NavigationContainer>
   );
 }
