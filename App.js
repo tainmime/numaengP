@@ -3,14 +3,16 @@ import { View, Text, Button, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator, Header } from "@react-navigation/stack";
 import HomeScreen from './src/screen/HomeScreen'
+import CalendarScreen from "./src/screen/calenda";
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="calenda">
         <Stack.Screen name="Home" component={HomeScreen} options={{headerShown:false}}/>
+        <Stack.Screen name="calenda" component={CalendarScreen} options={{headerShown:false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
