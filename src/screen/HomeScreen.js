@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from "react-native";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
+
 const HomeScreen = ({ navigation }) => {
     const [isDarkMode, setIsDarkMode] = useState(false);
 
     return (
         <ImageBackground 
-            source={isDarkMode ? require('D:\work\mobile app\numaengP\assets\Black_and_White_With_Yellow_Smoke_Coming_Soon_Instagram_Story_Video.png') : require('D:\work\mobile app\numaengP\assets\Black_and_White_With_Yellow_Smoke_Coming_Soon_Instagram_Story_Video-2.png')} 
+            source={isDarkMode ? require('../../assets/RB.png') : require('../../assets/BB.png')} 
             style={styles.container}
         >
             <View style={styles.iconContainer}>
