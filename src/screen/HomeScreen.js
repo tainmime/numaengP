@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from "react-native";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
+
 const HomeScreen = ({ navigation }) => {
     const [isDarkMode, setIsDarkMode] = useState(false);
 
     return (
         <ImageBackground 
-            // อย่าลืมเปลี่ยน Path ให้ตรงกับที่เราเก็บรูปไว้เด้อ
-            source={isDarkMode ? require('/Users/j/Desktop/MoblieApp/numaengP/assets/Black_and_White_With_Yellow_Smoke_Coming_Soon_Instagram_Story_Video.png') : require('/Users/j/Desktop/MoblieApp/numaengP/assets/Black_and_White_With_Yellow_Smoke_Coming_Soon_Instagram_Story_Video-2.png')} 
+            source={isDarkMode ? require('../../assets/RB.png') : require('../../assets/BB.png')} 
             style={styles.container}
         >
             <View style={styles.iconContainer}>
