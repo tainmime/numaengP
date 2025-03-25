@@ -1,124 +1,161 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
-import { Calendar } from 'react-native-calendars';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, Modal } from 'react-native';
+import DayCard from '../component/DayCard';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-const CalendarScreen = () => {
-  const [events, setEvents] = useState([]);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+export default function CalendarScreen() {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedDay, setSelectedDay] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  // ฟังก์ชันในการดึงข้อมูลจาก API ปฏิทิน (ตัวอย่าง API)
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        // ปรับ URL ตาม API ของคุณ
-        const response = await fetch('https://your-calendar-api.com/events');
-        const data = await response.json();
-        setEvents(data); // บันทึกข้อมูลที่ดึงมา
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      }
-    };
+  const screenWidth = Dimensions.get('window').width;
 
-    fetchEvents();
-  }, []);
-
-  // การจัดการวันที่ที่มีเหตุการณ์
-  const markedDates = events.reduce((acc, event) => {
-    acc[event.date] = {
-      selected: true,
-      marked: true,
-      selectedColor: 'blue',
-      selectedTextColor: 'white'
-    };
-    return acc;
-  }, {});
-
-  // ฟังก์ชันเปลี่ยนธีมสี
-  const toggleTheme = () => {
-    setIsDarkMode(prevMode => !prevMode);
+  const getDaysInMonth = (year, month) => {
+    const numDays = new Date(year, month + 1, 0).getDate();
+    return [...Array(numDays)].map((_, i) => i + 1);
   };
 
-  // ปรับเปลี่ยนสีให้เหมาะสมกับ Dark Mode และ Light Mode
-  const backgroundColor = isDarkMode ? '#333' : '#fff';
-  const textColor = isDarkMode ? '#fff' : '#d32f2f';
+  const getFirstDayOfMonth = (year, month) => {
+    return new Date(year, month, 1).getDay(); // หาวันแรกของเดือน
+  };
+
+  const days = getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth());
+  const firstDay = getFirstDayOfMonth(currentDate.getFullYear(), currentDate.getMonth());
+
+  const changeMonth = (n) => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + n, 1));
+  };
+
+  const openModal = (day) => {
+    setSelectedDay(day);
+    setModalVisible(true);
+  };
+
+  // เตรียม data สำหรับ flatlist เพื่อแสดงวันในแต่ละเดือน
+  const calendarDays = [...Array(firstDay).fill(null), ...days];
 
   return (
-    <View style={[styles.container, { backgroundColor }]}>
-      <Text style={[styles.title, { color: textColor }]}>Calendar</Text>
+    <View style={styles.container}>
+      <View style={styles.calendarContainer}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => changeMonth(-1)}>
+            <Text style={styles.arrow}>◀</Text>
+          </TouchableOpacity>
+          <Text style={styles.month}>
+            {currentDate.toLocaleString('default', { month: 'long' }).toUpperCase()} {currentDate.getFullYear()}
+          </Text>
+          <TouchableOpacity onPress={() => changeMonth(1)}>
+            <Text style={styles.arrow}>▶</Text>
+          </TouchableOpacity>
+        </View>
 
-      {/* FlatList สำหรับการเลื่อนปฏิทิน */}
-      <FlatList
-        data={['January', 'February', 'March', 'April', 'May', 'June']}
-        renderItem={({ item }) => (
-          <View style={styles.monthContainer}>
-            <Text style={[styles.monthText, { color: textColor }]}>{item}</Text>
+        {/* Day Labels */}
+        <View style={styles.weekRow}>
+          {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((day) => (
+            <Text style={styles.weekDay} key={day}>{day}</Text>
+          ))}
+        </View>
+
+        {/* Calendar Days */}
+        <FlatList
+          data={calendarDays}
+          numColumns={7}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <TouchableOpacity onPress={() => openModal(item)}>
+              <View style={[styles.dayBox, { width: (screenWidth - 70) / 7 }]}>
+                {item && <Text style={styles.dayText}>{item}</Text>}
+              </View>
+            </TouchableOpacity>
+          )}
+          contentContainerStyle={{ paddingBottom: 40 }}
+        />
+
+        {/* Modal */}
+        <Modal
+          visible={modalVisible}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <DayCard date={`${selectedDay}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`} />
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <Text style={styles.closeBtn}>Close</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        )}
-        keyExtractor={(item) => item}
-      />
-
-      {/* ปฏิทิน */}
-      <Calendar
-        current={'2025-03-25'}
-        markedDates={markedDates}
-        onDayPress={(day) => {
-          console.log('selected day', day);
-        }}
-        monthFormat={'yyyy MM'}
-        hideDayNames={false}
-        showWeekNumbers={true}
-      />
-
-      {/* ปุ่ม Dark Mode หรือ Light Mode */}
-      <TouchableOpacity
-        style={[styles.darkModeButton, { backgroundColor: textColor }]}
-        onPress={toggleTheme}
-      >
-        <Text style={[styles.darkModeText, { color: backgroundColor }]}>
-          {isDarkMode ? '☀️ Switch to Light Mode' : '🌙 Switch to Dark Mode'}
-        </Text>
-      </TouchableOpacity>
+        </Modal>
+      </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  container: { 
+    flex: 1, 
+    backgroundColor: '#fff', 
+    paddingTop: 50,
+    alignItems: 'center', // จัดให้ปฏิทินอยู่กลางจอ
+    justifyContent: 'center', // จัดให้ปฏิทินอยู่กลางจอ
+  },
+  calendarContainer: { // เพิ่ม Container ที่ล้อมรอบปฏิทิน
+    padding: 10,  // เพิ่ม padding รอบๆ ปฏิทิน
+    borderRadius: 15,
+    borderWidth: 2,
+    borderColor: '#ddd',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    backgroundColor: '#fff',
+    width: '90%',  // กำหนดให้ขนาดปฏิทินอยู่ที่ 90% ของความกว้างหน้าจอ
+  },
+  header: {
+    backgroundColor: '#c62828',
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  month: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
+  arrow: { fontSize: 28, color: '#fff' },
+  weekRow: { flexDirection: 'row', backgroundColor: '#fff', borderBottomWidth: 1, borderColor: '#ccc' },
+  weekDay: { flex: 1, textAlign: 'center', paddingVertical: 8, fontWeight: 'bold', color: '#c62828' },
+
+  dayBox: {
+    height: 70,  // ความสูงของวัน
+    borderWidth: 1,
+    borderColor: '#ddd',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 5,
+  },
+  dayText: { 
+    fontSize: 14, 
+    color: '#333', 
+    fontWeight: 'bold' 
+  },  // ลดขนาดตัวเลข
+  swipeText: { textAlign: 'center', color: '#c62828', marginTop: 15 },
+  closeBtn: {
+    marginTop: 15,
+    textAlign: 'center',
+    color: '#c62828',
+    fontSize: 18,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    width: '85%',
+    borderRadius: 16,
     padding: 20,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  monthContainer: {
-    padding: 10,
-    borderRadius: 8,
-    marginBottom: 5,
-    backgroundColor: '#f0f0f0',
-    width: '100%',
-    alignItems: 'center',
-  },
-  monthText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  darkModeButton: {
-    position: 'absolute',
-    top: 40,
-    right: 20,
-    padding: 10,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  darkModeText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
 });
-
-export default CalendarScreen;
