@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator, Header } from "@react-navigation/stack";
 import HomeScreen from './src/screen/HomeScreen'
 import CalendarScreen from "./src/screen/calenda";
+import RegisterScreen from "./src/screen/RegisterScreen";
 
 const Stack = createStackNavigator();
 
@@ -13,6 +14,7 @@ export default function App() {
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} options={{headerShown:false}}/>
         <Stack.Screen name="calenda" component={CalendarScreen} options={{headerShown:false}}/>
+        <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown:false}}/>
       </Stack.Navigator> 
     </NavigationContainer>
   );
