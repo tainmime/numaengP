@@ -25,8 +25,6 @@
       "favicon": "./assets/favicon.png"
     },
     "extra": {
-      "googleClientId": "134513512208-hke46l7bdsgs6g9bsm6at9b950n512cd.apps.googleusercontent.com",
-      "googleClientSecret": "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"
     }
   }
 }
