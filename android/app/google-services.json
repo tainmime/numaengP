@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "860933797973",
+    "project_id": "namaeng",
+    "storage_bucket": "namaeng.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:860933797973:android:e3b0bc1f64173e0f11bcdc",
+        "android_client_info": {
+          "package_name": "com.b6521650556.numaengP"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "860933797973-1euqof1tstm82dedf8dsuum3n4fgc4hv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.b6521650556.numaengP",
+            "certificate_hash": "4030f7606586da9903a5f8f5c781c36be1ca854a"
+          }
+        },
+        {
+          "client_id": "860933797973-28ccojvp27qb6lfhnuk1kbief1ou8scr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxrvWY-OsC_PyEFj0SG3RUqOL7UD_ylpA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "860933797973-28ccojvp27qb6lfhnuk1kbief1ou8scr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

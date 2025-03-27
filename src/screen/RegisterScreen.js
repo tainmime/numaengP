@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Alert ,ImageBackground, Animated} from "react-native";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
 
 
 const RegisterScreen = ({ navigation }) => {
@@ -10,6 +11,12 @@ const RegisterScreen = ({ navigation }) => {
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [animatedValue] = useState(new Animated.Value(0));
 
+    useEffect(() => {
+        GoogleSignin.configure({
+            webClientId: '860933797973-28ccojvp27qb6lfhnuk1kbief1ou8scr.apps.googleusercontent.com',
+          });
+    }
+    , []);
     useEffect(() => {
         const loadTheme = async () => {
             const savedTheme = await AsyncStorage.getItem('darkMode');
@@ -38,7 +45,28 @@ const RegisterScreen = ({ navigation }) => {
         inputRange: [0, 1],
         outputRange: [2, 28],
     });
-
+    async function onGoogleButtonPress() {
+        // Check if your device supports Google Play
+        await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+        // Get the users ID token
+        const signInResult = await GoogleSignin.signIn();
+      
+        // Try the new style of google-sign in result, from v13+ of that module
+        idToken = signInResult.data?.idToken;
+        if (!idToken) {
+          // if you are using older versions of google-signin, try old style result
+          idToken = signInResult.idToken;
+        }
+        if (!idToken) {
+          throw new Error('No ID token found');
+        }
+      
+        // Create a Google credential with the token
+        const googleCredential = auth.GoogleAuthProvider.credential(signInResult.data.idToken);
+      
+        // Sign-in the user with the credential
+        return auth().signInWithCredential(googleCredential);
+      }
 
 
     return (
@@ -65,12 +93,12 @@ const RegisterScreen = ({ navigation }) => {
 
             <TouchableOpacity 
                 style={[styles.button, { backgroundColor: isDarkMode ? "#444" : "#444" }]} 
-                onPress={() => navigation.navigate("Register")}
+                onPress={() => navigation.navigate("calenda")}
             > 
                 <Text style={styles.buttonText}>Phone or Email</Text>
             </TouchableOpacity>
             <Text style={styles.text}>___________________ OR ___________________</Text>
-            <TouchableOpacity style={styles.googleButton} >
+            <TouchableOpacity style={styles.googleButton} onPress={onGoogleButtonPress}>
                 <Text style={styles.buttonText}>Sign in with Google</Text>
             </TouchableOpacity>
 
