@@ -46,11 +46,13 @@ const RegisterScreen = ({ navigation }) => {
         outputRange: [2, 28],
     });
     async function onGoogleButtonPress() {
+        
         // Check if your device supports Google Play
         await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+        
         // Get the users ID token
         const signInResult = await GoogleSignin.signIn();
-      
+        
         // Try the new style of google-sign in result, from v13+ of that module
         idToken = signInResult.data?.idToken;
         if (!idToken) {
@@ -60,12 +62,13 @@ const RegisterScreen = ({ navigation }) => {
         if (!idToken) {
           throw new Error('No ID token found');
         }
-      
+        console.log('Google ID Token:', idToken);
         // Create a Google credential with the token
         const googleCredential = auth.GoogleAuthProvider.credential(signInResult.data.idToken);
       
         // Sign-in the user with the credential
         return auth().signInWithCredential(googleCredential);
+        console.log('Error:', error);
       }
 
 
@@ -102,9 +105,6 @@ const RegisterScreen = ({ navigation }) => {
                 <Text style={styles.buttonText}>Sign in with Google</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.googleButton2} >
-                <Text style={styles.buttonText}>Sign in with Facebook</Text>
-            </TouchableOpacity>
 
             <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate("Home")}>
                 <Text style={styles.buttonText}>Back to Home</Text>
@@ -114,7 +114,6 @@ const RegisterScreen = ({ navigation }) => {
     );
 };
 
-// **🎨 สไตล์**
 const styles = StyleSheet.create({
     container: {
         flex: 1,

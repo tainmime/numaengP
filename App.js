@@ -19,7 +19,7 @@ export default function App() {
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="calenda" component={CalendarScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen name="RegisPhone" component={RegisPhone}/>
+          <Stack.Screen name="RegisPhone" component={RegisPhone} options={{ headerShown: true }}/>
         </Stack.Navigator>
       </NavigationContainer>
     </>
