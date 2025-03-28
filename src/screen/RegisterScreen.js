@@ -93,7 +93,7 @@ const RegisterScreen = ({ navigation }) => {
 
             <TouchableOpacity 
                 style={[styles.button, { backgroundColor: isDarkMode ? "#444" : "#444" }]} 
-                onPress={() => navigation.navigate("calenda")}
+                onPress={() => navigation.navigate("RegisPhone")}
             > 
                 <Text style={styles.buttonText}>Phone or Email</Text>
             </TouchableOpacity>
