@@ -48,7 +48,7 @@ const RegisterScreen = ({ navigation }) => {
     async function onGoogleButtonPress() {
         // Check if your device supports Google Play
         await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-        await navigation.replace("Profile");
+        navigation.navigate("BottomTabs", { screen: "Profile" });
         // Get the users ID token
         const signInResult = await GoogleSignin.signIn();
         

@@ -85,9 +85,8 @@ const LoginSceen = ({ navigation }) => {
             await AsyncStorage.setItem("token", response.token);
             await AsyncStorage.setItem("user", JSON.stringify(userData));
 
-            console.log("✅ API User Data Saved:", userData);
+            console.log("API User Data Saved:", userData);
 
-            Alert.alert("Login Success", `Welcome ${userData.fullname || "User"}!`);
 
             const savedUserData = await AsyncStorage.getItem("user");
             console.log("🔍 Saved User Data:", JSON.parse(savedUserData));
