@@ -1,16 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, Modal, ImageBackground } from 'react-native';
 import DayCard from '../component/DayCard';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
+
 const CalendarScreen = () => {
+  const [todos, setTodos] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [activeButton, setActiveButton] = useState('month'); // month or week
 
   const screenWidth = Dimensions.get('window').width;
+  
+  const fetchTodos = async () => {
+    try {
+      const response = await fetch("http://26.231.42.50:5001/todos");
+      const todosData = await response.json();
+      setTodos(todosData);
+    } catch (error) {
+      console.error("Failed to fetch todos:", error);
+    }
+  };
+   
+  useEffect(() => {
+    fetchTodos();
+  }, []);
+
+  const formatDate = (day, month, year) => {
+    const dd = day.toString().padStart(2, '0');
+    const mm = (month + 1).toString().padStart(2, '0');
+    return `${dd}/${mm}/${year}`;
+  };
+  
 
   const getDaysInMonth = (year, month) => {
     const numDays = new Date(year, month + 1, 0).getDate();
@@ -93,13 +116,23 @@ const CalendarScreen = () => {
             numColumns={activeButton === 'month' ? 7 : 1}
             keyExtractor={(item, index) => index.toString()}
             key={activeButton}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => openModal(item)}>
-                <View style={[styles.dayBox, { width: (screenWidth - 100) / (activeButton === 'month' ? 7 : 1) }]}>
-                  {item && <Text style={styles.dayTextLeft}>{item}</Text>}
-                </View>
-              </TouchableOpacity>
-            )}
+            renderItem={({ item }) => {
+              const thisDate = formatDate(item, currentDate.getMonth(), currentDate.getFullYear());
+              const hasTodo = todos.some(todo => todo.date === thisDate);
+            
+              return (
+                <TouchableOpacity onPress={() => openModal(item)}>
+                  <View style={[styles.dayBox, { width: (screenWidth - 100) / (activeButton === 'month' ? 7 : 1) }]}>
+                  {item && (
+                  <>
+                    <Text style={styles.dayTextLeft}>{item}</Text>
+                    {hasTodo && <View style={styles.dot} />}
+                  </>
+                  )}
+                  </View>
+                </TouchableOpacity>
+              );
+            }}            
           />
         </View>
       </View>
@@ -107,7 +140,10 @@ const CalendarScreen = () => {
       <Modal visible={modalVisible} transparent animationType="fade" onRequestClose={() => setModalVisible(false)}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <DayCard date={`${selectedDay}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`} />
+          <DayCard 
+           date={formatDate(selectedDay, currentDate.getMonth(), currentDate.getFullYear())}
+          todos={todos}
+          />
             <TouchableOpacity onPress={() => setModalVisible(false)}>
               <Text style={styles.closeBtn}>Close</Text>
             </TouchableOpacity>
@@ -179,6 +215,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 5,
     flexDirection: 'row',
+    position: 'relative',
   },
   dayTextLeft: { 
     fontSize: 14, 
@@ -205,6 +242,16 @@ const styles = StyleSheet.create({
     color: '#d10000',
     fontSize: 18,
   },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: 'red',
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    zIndex: 1,
+  },  
 });
 
 export default CalendarScreen;

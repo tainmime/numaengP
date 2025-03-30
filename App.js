@@ -23,7 +23,7 @@ export default function App() {
     <>
       <StatusBar hidden={true} />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="todolist" screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName="calenda" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="RegisPhone" component={RegisPhone} options={{ headerShown: true }}/>
@@ -31,6 +31,7 @@ export default function App() {
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="todolist" component={TodoScreen} />
           <Stack.Screen name="BottomTabs" component={BottomTabNavigator} options={{ headerShown: false}} />
+          <Stack.Screen name="calenda" component={CalendarScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </>
