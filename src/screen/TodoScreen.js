@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Modal, ImageBackground } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign"; 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Category from "../component/Category";
 
 const STORAGE_KEY = "@cards_data";

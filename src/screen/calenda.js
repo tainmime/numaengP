@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, Modal } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, Modal, ImageBackground } from 'react-native';
 import DayCard from '../component/DayCard';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
@@ -56,7 +56,7 @@ const CalendarScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ImageBackground source={require('../../assets/calendaB.png')} style={styles.container}>
       <View style={styles.contentContainer}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -114,14 +114,13 @@ const CalendarScreen = () => {
           </View>
         </View>
       </Modal>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -133,7 +132,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     width: '100%',
     paddingVertical: 10,
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',  // เปลี่ยนจาก 'white' เป็น 'transparent'
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -142,6 +141,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     paddingHorizontal: 20,
   },
+  
   iconButton: {
     padding: 10,
     backgroundColor: '#d10000',
