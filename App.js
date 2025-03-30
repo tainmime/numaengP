@@ -12,14 +12,6 @@ const Stack = createStackNavigator();
 
 export default function App() {
   return (
-<<<<<<< HEAD
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="calenda">
-        <Stack.Screen name="Home" component={HomeScreen} options={{headerShown:false}}/>
-        <Stack.Screen name="calenda" component={CalendarScreen} options={{headerShown:false}}/>
-      </Stack.Navigator> 
-    </NavigationContainer>
-=======
     <>
       <StatusBar hidden={true} />
       <NavigationContainer>
@@ -31,7 +23,6 @@ export default function App() {
         </Stack.Navigator>
       </NavigationContainer>
     </>
->>>>>>> 5c91c1b1ba3e0d06f00b54b9ecc3b02ec509144c
   );
 }
 
