@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, Modal } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, Modal, ImageBackground } from 'react-native';
 import DayCard from '../component/DayCard';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
-export default function CalendarScreen() {
+const CalendarScreen = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -34,7 +34,7 @@ export default function CalendarScreen() {
     return days;
   };
 
-  const days = activeButton === 'week' ? getDaysInWeek(currentDate) : getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth());
+  const days = activeButton === 'week' ? getDaysInWeek(currentDate).filter(day => day !== null) : getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth());
   const firstDay = getFirstDayOfMonth(currentDate.getFullYear(), currentDate.getMonth());
   const calendarDays = [...Array(firstDay).fill(null), ...days];
 
@@ -56,26 +56,23 @@ export default function CalendarScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      {/* View ซ้อนเพื่อให้ปุ่มและปฏิทินอยู่ในตำแหน่งเดียวกัน */}
+    <ImageBackground source={require('../../assets/calendaB.png')} style={styles.container}>
       <View style={styles.contentContainer}>
-        {/* ปุ่มเปลี่ยนมุมมอง */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.iconButton, activeButton === 'month' && styles.activeButton]}
             onPress={() => handleButtonPress('month')}
           >
-            <MaterialIcons name="calendar-month" size={24} color={activeButton === 'month' ? '#c62828' : 'white'} />
+            <Text><MaterialIcons name="calendar-month" size={24} color={activeButton === 'month' ? '#d10000' : 'white'} /></Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.iconButton, activeButton === 'week' && styles.activeButton]}
             onPress={() => handleButtonPress('week')}
           >
-            <FontAwesome5 name="calendar-week" size={24} color={activeButton === 'week' ? '#c62828' : 'white'} />
+            <Text><FontAwesome5 name="calendar-week" size={24} color={activeButton === 'week' ? '#d10000' : 'white'} /></Text>
           </TouchableOpacity>
         </View>
 
-        {/* ปฏิทิน */}
         <View style={styles.calendarContainer}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => activeButton === 'month' ? changeMonth(-1) : changeWeek(-1)}>
@@ -92,13 +89,14 @@ export default function CalendarScreen() {
           </View>
 
           <FlatList
-            data={calendarDays}
-            numColumns={7} // ปรับให้เหมาะสมกับการแสดงวันในสัปดาห์
+            data={calendarDays.filter(day => day !== null)}
+            numColumns={activeButton === 'month' ? 7 : 1}
             keyExtractor={(item, index) => index.toString()}
+            key={activeButton}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => openModal(item)}>
-                <View style={[styles.dayBox, { width: (screenWidth - 70) / 7 }]}>
-                  {item && <Text style={styles.dayText}>{item}</Text>}
+                <View style={[styles.dayBox, { width: (screenWidth - 100) / (activeButton === 'month' ? 7 : 1) }]}>
+                  {item && <Text style={styles.dayTextLeft}>{item}</Text>}
                 </View>
               </TouchableOpacity>
             )}
@@ -106,7 +104,6 @@ export default function CalendarScreen() {
         </View>
       </View>
 
-      {/* Modal */}
       <Modal visible={modalVisible} transparent animationType="fade" onRequestClose={() => setModalVisible(false)}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
@@ -117,43 +114,43 @@ export default function CalendarScreen() {
           </View>
         </View>
       </Modal>
-    </View>
+    </ImageBackground>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center', // ทำให้ทุกอย่างอยู่ตรงกลาง
-    alignItems: 'center', // ทำให้ทุกอย่างอยู่ตรงกลาง
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   contentContainer: {
-    alignItems: 'center', // จัดให้ปุ่มและปฏิทินอยู่กลาง
+    alignItems: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-start', // ปรับปุ่มไปทางซ้าย
+    justifyContent: 'flex-start',
     width: '100%',
     paddingVertical: 10,
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',  // เปลี่ยนจาก 'white' เป็น 'transparent'
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     borderBottomWidth: 1,
     borderColor: '#ddd',
-    paddingHorizontal: 20, // เพิ่ม padding ซ้ายขวา
+    paddingHorizontal: 20,
   },
+  
   iconButton: {
     padding: 10,
-    backgroundColor: '#c62828',
+    backgroundColor: '#d10000',
     borderRadius: 8,
     marginHorizontal: 10,
   },
   activeButton: {
     backgroundColor: '#fff',
-    borderColor: '#c62828',
+    borderColor: '#d10000',
     borderWidth: 2,
   },
   calendarContainer: {
@@ -169,7 +166,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#c62828',
+    backgroundColor: '#d10000',
   },
   month: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
   arrow: { fontSize: 28, color: '#fff' },
@@ -181,8 +178,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     borderRadius: 5,
+    flexDirection: 'row',
   },
-  dayText: { fontSize: 14, color: '#333', fontWeight: 'bold' },
+  dayTextLeft: { 
+    fontSize: 14, 
+    color: '#333', 
+    fontWeight: 'bold', 
+    textAlign: 'left',  
+    marginLeft: 10,  
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.3)',
@@ -198,7 +202,9 @@ const styles = StyleSheet.create({
   closeBtn: {
     marginTop: 15,
     textAlign: 'center',
-    color: '#c62828',
+    color: '#d10000',
     fontSize: 18,
   },
 });
+
+export default CalendarScreen;
