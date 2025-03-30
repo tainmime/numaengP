@@ -13,14 +13,10 @@ const Stack = createStackNavigator();
 
 export default function App() {
   return (
-<<<<<<< HEAD
-
-=======
->>>>>>> b475acb57590be03e0337ded8e93c2dd6da1cd3a
     <>
       <StatusBar hidden={true} />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="calenda" screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName="todolist" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="calenda" component={CalendarScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
