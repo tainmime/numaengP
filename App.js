@@ -7,7 +7,7 @@ import HomeScreen from './src/screen/HomeScreen';
 import CalendarScreen from "./src/screen/calenda";
 import RegisterScreen from "./src/screen/RegisterScreen";
 import RegisPhone from "./src/screen/RegisPhone";
-import TodoScreen from "./src/screen/TodoScreen"
+import TodoScreen from "./src/screen/TodoScreen";
 
 const Stack = createStackNavigator();
 
@@ -20,6 +20,7 @@ export default function App() {
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="calenda" component={CalendarScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen name="Todo" component={TodoScreen} />
           <Stack.Screen name="RegisPhone" component={RegisPhone} options={{ headerShown: true }}/>
           <Stack.Screen name="todolist" component={TodoScreen} options={{ headerShown: true }}/>
         </Stack.Navigator>
