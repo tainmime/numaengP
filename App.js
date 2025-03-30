@@ -23,11 +23,13 @@ export default function App() {
     <>
       <StatusBar hidden={true} />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName="todolist" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen name="RegisPhone" component={RegisPhone} options={{ headerShown: true }} />
+          <Stack.Screen name="RegisPhone" component={RegisPhone} options={{ headerShown: true }}/>
           <Stack.Screen name="Login" component={LoginSceen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="todolist" component={TodoScreen} />
           <Stack.Screen name="BottomTabs" component={BottomTabNavigator} options={{ headerShown: false}} />
         </Stack.Navigator>
       </NavigationContainer>
