@@ -1,229 +1,217 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, Modal } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import Category from "../components/Category";
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, Modal } from 'react-native';
+import DayCard from '../component/DayCard';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
-const STORAGE_KEY = "@cards_data";
-
-const TodoScreen = () => {
-  const [users, setUsers] = useState([]); 
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [category, setCategory] = useState("");
+export default function CalendarScreen() {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedDay, setSelectedDay] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [activeButton, setActiveButton] = useState('month'); // month or week
 
-  useEffect(() => {
-    loadCards();
-  }, []);
+  const screenWidth = Dimensions.get('window').width;
 
-  useEffect(() => {
-    const saveCards = async () => {
-      try {
-        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(users));
-      } catch (error) {
-        console.error("Error saving data:", error);
-      }
-    };
-    if (users.length > 0) { // ตรวจสอบว่า users มีข้อมูลก่อนที่จะบันทึก
-      saveCards();
-    }
-  }, [users]);
-
-  const loadCards = async () => {
-    try {
-      const storedCards = await AsyncStorage.getItem(STORAGE_KEY);
-      if (storedCards) {
-        const parsedCards = JSON.parse(storedCards);
-        if (Array.isArray(parsedCards)) {
-          setUsers(parsedCards); // ตรวจสอบว่า parsedCards เป็น array ก่อน
-        }
-      }
-    } catch (error) {
-      console.error("Failed to load data:", error);
-    }
+  const getDaysInMonth = (year, month) => {
+    const numDays = new Date(year, month + 1, 0).getDate();
+    return [...Array(numDays)].map((_, i) => i + 1);
   };
 
-  const clearCard = async () => {
-    try {
-      await AsyncStorage.removeItem(STORAGE_KEY);
-      setUsers([]);
-    } catch (error) {
-      console.error("Error:", error);
-    }
+  const getFirstDayOfMonth = (year, month) => {
+    return new Date(year, month, 1).getDay();
   };
 
-  const addMsg = () => {
-    if (!title.trim() || !content.trim() || !category.trim()) {
-      alert("Please fill all fields!");
-      return;
+  const getDaysInWeek = (date) => {
+    const startOfWeek = new Date(date);
+    startOfWeek.setDate(date.getDate() - date.getDay()); // ไปยังวันเริ่มต้นของสัปดาห์ (วันอาทิตย์)
+
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const day = new Date(startOfWeek);
+      day.setDate(startOfWeek.getDate() + i);
+      days.push(day.getDate());
     }
-
-    const newMsg = {
-      id: Date.now().toString(),
-      name: title.trim(),
-      content : content.trim(),
-      category: category.trim(),
-    };
-
-    setUsers((prevUsers) => [newMsg, ...prevUsers]);
-    setTitle("");
-    setContent("");
-    setCategory("");
-    setModalVisible(false);
+    return days;
   };
 
-  // ✅ จัดกลุ่มข้อมูลตาม `category`
-  const groupedData = users.reduce((acc, item) => {
-    if (!acc[item.category]) {
-      acc[item.category] = [];
-    }
-    acc[item.category].push(item);
-    return acc;
-  }, {});
+  const days = activeButton === 'week' ? getDaysInWeek(currentDate) : getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth());
+  const firstDay = getFirstDayOfMonth(currentDate.getFullYear(), currentDate.getMonth());
+  const calendarDays = [...Array(firstDay).fill(null), ...days];
+
+  const changeMonth = (n) => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + n, 1));
+  };
+
+  const changeWeek = (n) => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (n * 7)));
+  };
+
+  const openModal = (day) => {
+    setSelectedDay(day);
+    setModalVisible(true);
+  };
+
+  const handleButtonPress = (button) => {
+    setActiveButton(button);
+  };
 
   return (
     <View style={styles.container}>
-      {/* Header + ไอคอนเพิ่ม */}
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Do-List</Text>
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <AntDesign name="pluscircle" size={32} color="#007BFF" />
-        </TouchableOpacity>
+      <View style={styles.contentContainer}>
+        {/* ปุ่มเปลี่ยนมุมมอง */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.iconButton, activeButton === 'month' && styles.activeButton]}
+            onPress={() => handleButtonPress('month')}
+          >
+            <MaterialIcons name="calendar-month" size={24} color={activeButton === 'month' ? '#c62828' : 'white'} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.iconButton, activeButton === 'week' && styles.activeButton]}
+            onPress={() => handleButtonPress('week')}
+          >
+            <FontAwesome5 name="calendar-week" size={24} color={activeButton === 'week' ? '#c62828' : 'white'} />
+          </TouchableOpacity>
+        </View>
+
+        {/* ปฏิทิน */}
+        <View style={styles.calendarContainer}>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => activeButton === 'month' ? changeMonth(-1) : changeWeek(-1)}>
+              <Text style={styles.arrow}>◀</Text>
+            </TouchableOpacity>
+            <Text style={styles.month}>
+              {activeButton === 'month'
+                ? `${currentDate.toLocaleString('default', { month: 'long' })} ${currentDate.getFullYear()}`
+                : `Week of ${currentDate.toLocaleString('default', { month: 'long' })} ${currentDate.getFullYear()}`}
+            </Text>
+            <TouchableOpacity onPress={() => activeButton === 'month' ? changeMonth(1) : changeWeek(1)}>
+              <Text style={styles.arrow}>▶</Text>
+            </TouchableOpacity>
+          </View>
+
+          {activeButton === 'week' ? (
+            <FlatList
+              data={days}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => openModal(item)}>
+                  <View style={[styles.dayBox, { width: screenWidth - 20 }]}>
+                    <Text style={styles.dayText}>{item}</Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+          ) : (
+            <FlatList
+              data={calendarDays}
+              numColumns={7}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => openModal(item)}>
+                  <View style={[styles.dayBox, { width: (screenWidth - 70) / 7 }]}>
+                    {item && <Text style={styles.dayText}>{item}</Text>}
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+          )}
+        </View>
       </View>
 
-      {/* Modal สำหรับเพิ่ม Do-List */}
-      <Modal visible={modalVisible} animationType="slide" transparent={true}>
-        <View style={styles.modalContainer}>
+      {/* Modal */}
+      <Modal visible={modalVisible} transparent animationType="fade" onRequestClose={() => setModalVisible(false)}>
+        <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Add Do-List</Text>
-            <TextInput
-              style={styles.input}
-              value={title}
-              onChangeText={setTitle}
-              placeholder="Enter Title"
-              placeholderTextColor="gray"
-            />
-            <TextInput
-              style={styles.input}
-              value={content}
-              onChangeText={setContent}
-              placeholder="Enter Content"
-              placeholderTextColor="gray"
-            />
-            <TextInput
-              style={styles.input}
-              value={category}
-              onChangeText={setCategory}
-              placeholder="Enter Category"
-              placeholderTextColor="gray"
-            />
-            <View style={styles.modalButtons}>
-              <TouchableOpacity style={styles.addButton} onPress={addMsg}>
-                <Text style={styles.buttonText}>Submit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity>
-            </View>
+            <DayCard date={`${selectedDay}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`} />
+            <TouchableOpacity onPress={() => setModalVisible(false)}>
+              <Text style={styles.closeBtn}>Close</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
-
-      {/* ✅ ใช้ Component `Category` แทนการเขียน FlatList ตรงนี้ */}
-      <FlatList
-        data={Object.keys(groupedData)}
-        keyExtractor={(category) => category}
-        renderItem={({ item: category }) => (
-          <Category category={category} data={groupedData[category]} />
-        )}
-      />
-
-      {/* ปุ่ม Clear */}
-      <TouchableOpacity style={styles.clearButton} onPress={clearCard}>
-        <Text style={styles.buttonText}>Clear All</Text>
-      </TouchableOpacity>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
-    backgroundColor: "#f8f8f8",
-    paddingHorizontal: 10,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  contentContainer: {
+    alignItems: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    width: '100%',
+    paddingVertical: 10,
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    borderBottomWidth: 1,
+    borderColor: '#ddd',
+    paddingHorizontal: 20,
+  },
+  iconButton: {
+    padding: 10,
+    backgroundColor: '#c62828',
+    borderRadius: 8,
+    marginHorizontal: 10,
+  },
+  activeButton: {
+    backgroundColor: '#fff',
+    borderColor: '#c62828',
+    borderWidth: 2,
+  },
+  calendarContainer: {
+    padding: 10,
+    borderRadius: 15,
+    borderWidth: 2,
+    borderColor: '#ddd',
+    backgroundColor: '#fff',
+    width: '90%',
   },
   header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    marginBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#c62828',
   },
-  headerText: {
-    fontSize: 24,
-    fontWeight: "bold",
+  month: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
+  arrow: { fontSize: 28, color: '#fff' },
+  dayBox: {
+    height: 65,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 5,
   },
-  modalContainer: {
+  dayText: { fontSize: 14, color: '#333', fontWeight: 'bold' },
+  modalOverlay: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalContent: {
-    width: "80%",
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
+    width: '85%',
+    borderRadius: 16,
     padding: 20,
-    borderRadius: 10,
-    alignItems: "center",
   },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  input: {
-    width: "100%",
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingLeft: 10,
-    marginBottom: 10,
-    backgroundColor: "#fff",
-  },
-  modalButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-  },
-  addButton: {
-    backgroundColor: "#007BFF",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    flex: 1,
-    marginRight: 5,
-    alignItems: "center",
-  },
-  cancelButton: {
-    backgroundColor: "gray",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    flex: 1,
-    marginLeft: 5,
-    alignItems: "center",
-  },
-  clearButton: {
-    backgroundColor: "red",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginTop: 10,
-    alignItems: "center",
+  closeBtn: {
+    marginTop: 15,
+    textAlign: 'center',
+    color: '#c62828',
+    fontSize: 18,
   },
 });
-
-export default TodoScreen;

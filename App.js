@@ -7,31 +7,25 @@ import HomeScreen from './src/screen/HomeScreen';
 import CalendarScreen from "./src/screen/calenda";
 import RegisterScreen from "./src/screen/RegisterScreen";
 import RegisPhone from "./src/screen/RegisPhone";
+import TodoScreen from "./src/screen/TodoScreen"
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
-<<<<<<< HEAD
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="calenda">
-        <Stack.Screen name="Home" component={HomeScreen} options={{headerShown:false}}/>
-        <Stack.Screen name="calenda" component={CalendarScreen} options={{headerShown:false}}/>
-      </Stack.Navigator> 
-    </NavigationContainer>
-=======
+
     <>
       <StatusBar hidden={true} />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName="calenda" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="calenda" component={CalendarScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="RegisPhone" component={RegisPhone} options={{ headerShown: true }}/>
+          <Stack.Screen name="todolist" component={TodoScreen} options={{ headerShown: true }}/>
         </Stack.Navigator>
       </NavigationContainer>
     </>
->>>>>>> 5c91c1b1ba3e0d06f00b54b9ecc3b02ec509144c
   );
 }
 
