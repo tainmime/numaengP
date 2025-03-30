@@ -125,8 +125,20 @@ const CalendarScreen = () => {
                   <View style={[styles.dayBox, { width: (screenWidth - 100) / (activeButton === 'month' ? 7 : 1) }]}>
                   {item && (
                   <>
-                    <Text style={styles.dayTextLeft}>{item}</Text>
-                    {hasTodo && <View style={styles.dot} />}
+                    <View style={{ width: '100%' }}>
+                      <Text style={styles.dayTextLeft}>{item}</Text>
+                      {hasTodo && <View style={styles.dot} />}
+
+                      {activeButton === 'week' && (
+                        <View style={{ marginTop: 5, marginLeft: 10 }}>
+                        {todos
+                        .filter(todo => todo.date === thisDate)
+                        .map(todo => (
+                          <Text key={todo.id} style={styles.todoItem}>• {todo.title}</Text>
+                        ))}
+                        </View>
+                     )}
+                    </View>
                   </>
                   )}
                   </View>
@@ -251,6 +263,11 @@ const styles = StyleSheet.create({
     top: 6,
     right: 6,
     zIndex: 1,
+  },  
+  todoItem: {
+    fontSize: 13,
+    color: '#555',
+    marginTop: 2,
   },  
 });
 
