@@ -93,7 +93,7 @@ const LoginSceen = ({ navigation }) => {
             console.log("🔍 Saved User Data:", JSON.parse(savedUserData));
 
             // Navigate to Profile after successful login
-            navigation.navigate("Profile");
+            navigation.navigate("BottomTabs", { screen: "Profile" });
         } catch (error) {
             console.error("Login Error:", error);
             Alert.alert("Login Failed", error.message || "Something went wrong.");

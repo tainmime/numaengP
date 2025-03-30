@@ -3,6 +3,9 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Animated, Image
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { launchImageLibrary } from "react-native-image-picker";
 
+
+
+
 const ProfileScreen = ({ navigation }) => {
     const [userData, setUserData] = useState(null);
     const [image, setImage] = useState(null);
@@ -46,7 +49,6 @@ const ProfileScreen = ({ navigation }) => {
                 if (user) {
                     setUserData(JSON.parse(user));
                 } else {
-                    // ตั้งค่าชื่อและอีเมล default
                     setUserData({
                         fullname: "NamAeng",
                         email: "NamAeng@example.com",
@@ -119,12 +121,12 @@ const ProfileScreen = ({ navigation }) => {
                 <View style={styles.textContainer}>
                     <Text style={styles.name}>{userData.fullname}</Text>
                     <Text style={styles.email}>{userData.email}</Text>
-                    <TouchableOpacity style={styles.button} onPress={handleImagePick}>
-                        <Text style={styles.buttonText}>Edit Profile</Text>
+                    <TouchableOpacity style={[styles.button,{ backgroundColor: isDarkMode ? "#444" : "white" }]} onPress={handleImagePick}>
+                        <Text style={[styles.buttonText ,{ color: isDarkMode ? "#fff" : "#000" }]}>Edit Profile</Text>
                     </TouchableOpacity>
                 </View>
             </View>
-            <View style={styles.innerContainer}>
+            <View style={[styles.innerContainer,{ backgroundColor: isDarkMode ? "#444" : "white" }]}>
                 <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
                     <Text style={styles.signOutText}>Sign Out</Text>
                 </TouchableOpacity>
@@ -159,7 +161,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         marginBottom: 20,
-        marginTop: 80,
+        marginTop: 170,
     },
     textContainer: {
         marginLeft: 20,
@@ -171,7 +173,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: "#fff",
         alignItems: 'flex-start',
-        marginLeft: 40,
+        marginLeft: 60,
     },
     name: {
         fontSize: 26,
@@ -199,7 +201,7 @@ const styles = StyleSheet.create({
     switchContainer: {
         position: "absolute",
         top: 50,
-        right: 20,
+        right: 30,
         width: 45,
         height: 20,
         borderRadius: 15,
