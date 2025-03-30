@@ -13,7 +13,10 @@ const Stack = createStackNavigator();
 
 export default function App() {
   return (
+<<<<<<< HEAD
 
+=======
+>>>>>>> b475acb57590be03e0337ded8e93c2dd6da1cd3a
     <>
       <StatusBar hidden={true} />
       <NavigationContainer>
