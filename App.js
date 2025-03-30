@@ -11,7 +11,9 @@ import RegisPhone from "./src/screen/RegisPhone";
 import LoginSceen from "./src/screen/LoginSceen";
 import ProfileScreen from "./src/screen/ProfileScreen";
 import TodoScreen from "./src/screen/TodoScreen";
+import TarotScreen from "./src/screen/TaroScreen";
 import { Ionicons } from '@expo/vector-icons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -30,6 +32,7 @@ export default function App() {
           <Stack.Screen name="Login" component={LoginSceen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="todolist" component={TodoScreen} />
+          <Stack.Screen name="Tarot" component={TarotScreen} />
           <Stack.Screen name="BottomTabs" component={BottomTabNavigator} options={{ headerShown: false}} />
         </Stack.Navigator>
       </NavigationContainer>
@@ -80,6 +83,18 @@ function BottomTabNavigator() {
           ),
           headerShown: false,
         }}
+        
+      />
+      <Tab.Screen
+        name="Tarot"
+        component={TarotScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="cards-playing" size={32} color={color} />
+          ),
+          headerShown: false,
+        }}
+        
       />
     </Tab.Navigator>
   );
