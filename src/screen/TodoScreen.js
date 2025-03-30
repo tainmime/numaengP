@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, Modal } from "react-native";
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Modal, ImageBackground } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign"; 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Category from "../components/Category";
@@ -96,7 +96,10 @@ const HomeScreen = () => {
   
 
   return (
-    <View style={styles.container}>
+    <ImageBackground 
+      source={require('../../assets/ToDo.png')} 
+      style={styles.container}
+    >
       <Text style={styles.header}>To-Do List</Text>
 
       <Modal
@@ -110,7 +113,6 @@ const HomeScreen = () => {
             <TextInput style={styles.input} value={title} onChangeText={setTitle} placeholder="Title" />
             <TextInput style={styles.input} value={content} onChangeText={setContent} placeholder="Content" />
             <TextInput style={styles.input} value={category} onChangeText={setCategory} placeholder="Category" />
-
             <View style={styles.modalButtons}>
               <TouchableOpacity style={styles.submitButton} onPress={addMsg}>
                 <Text style={styles.submitButtonText}>Submit</Text>
@@ -139,7 +141,7 @@ const HomeScreen = () => {
         <Text style={styles.addButtonText}>New List</Text>
         <AntDesign name="pluscircle" size={30} color="red" />
       </TouchableOpacity>
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -153,22 +155,25 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 25,
     fontWeight: "bold",
-    marginBottom: 10,
-    color: "red",
+    marginBottom: 15,
+    paddingHorizontal: 10,
+    padding: 20,
+    color: "white",
   },
   addButton: {
     position: "absolute",
-    bottom: 20,
+    bottom: 20, // ปรับค่า bottom ที่นี่เพื่อเพิ่มระยะห่างจากขอบล่าง
     left: 20,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#fff",
-    padding: 10,
+    padding: 5,
     borderRadius: 50,
-    elevation: 5,
+    elevation: 10,
+    marginBottom: 30, // เพิ่มระยะห่างจากขอบล่าง 30 หน่วย
   },
   addButtonText: {
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: "bold",
     marginRight: 8,
     color: "red",
