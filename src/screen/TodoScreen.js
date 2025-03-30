@@ -144,7 +144,7 @@ const HomeScreen = () => {
       </TouchableOpacity>
     </ImageBackground>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -183,8 +183,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     width: "80%",
     padding: 20,
-    borderRadius: 10,
-    alignItems: "center",
   },
   input: {
     width: "100%",
