@@ -29,10 +29,12 @@ const CalendarScreen = () => {
   }, []);
 
   const formatDate = (day, month, year) => {
+    if (day === null || day === undefined) return '';
     const dd = day.toString().padStart(2, '0');
     const mm = (month + 1).toString().padStart(2, '0');
     return `${dd}/${mm}/${year}`;
   };
+  
   
 
   const getDaysInMonth = (year, month) => {
@@ -150,18 +152,21 @@ const CalendarScreen = () => {
       </View>
 
       <Modal visible={modalVisible} transparent animationType="fade" onRequestClose={() => setModalVisible(false)}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+       <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          {selectedDay !== null && (
           <DayCard 
-           date={formatDate(selectedDay, currentDate.getMonth(), currentDate.getFullYear())}
+          date={formatDate(selectedDay, currentDate.getMonth(), currentDate.getFullYear())}
           todos={todos}
-          />
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
-              <Text style={styles.closeBtn}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+        />
+      )}
+      <TouchableOpacity onPress={() => setModalVisible(false)}>
+        <Text style={styles.closeBtn}>Close</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
+
     </ImageBackground>
   );
 };
