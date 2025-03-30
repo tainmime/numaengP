@@ -34,6 +34,7 @@ export default function App() {
           <Stack.Screen name="todolist" component={TodoScreen} />
           <Stack.Screen name="Tarot" component={TarotScreen} />
           <Stack.Screen name="BottomTabs" component={BottomTabNavigator} options={{ headerShown: false}} />
+          <Stack.Screen name="calenda" component={CalendarScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </>
