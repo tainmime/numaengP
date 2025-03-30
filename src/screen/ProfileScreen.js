@@ -27,6 +27,29 @@ const ProfileScreen = ({ navigation }) => {
         }).start();
     }, [isDarkMode]);
 
+    const [todos, setTodos] = useState([]);
+
+    useEffect(() => {
+     const fetchTodos = async () => {
+        try {
+        const response = await fetch("http://26.231.42.50:5001/todos");
+        const data = await response.json();
+        setTodos(data);
+        } catch (error) {
+        console.error("Error fetching todos:", error);
+        }
+     };
+
+  fetchTodos();
+}, []);
+
+    const groupedByDate = todos.reduce((acc, todo) => {
+        if (!acc[todo.date]) acc[todo.date] = [];
+        acc[todo.date].push(todo);
+     return acc;
+    }, {});
+  
+
     const toggleDarkMode = async () => {
         const newMode = !isDarkMode;
         setIsDarkMode(newMode);
@@ -124,6 +147,22 @@ const ProfileScreen = ({ navigation }) => {
                 </View>
             </View>
             <View style={[styles.innerContainer,{ backgroundColor: isDarkMode ? "#444" : "white" }]}>
+            <View style={{ padding: 20, width: '100%', alignItems: 'flex-start' }}>
+            <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>To-Do by Date</Text>
+            {Object.entries(groupedByDate).map(([date, items]) => (
+                <View key={date} style={{ marginBottom: 15 }}>
+                    <Text style={{ fontSize: 16, fontWeight: "600", color: "red" }}>{date}</Text>
+                <View style={{ marginLeft: 10 }}>
+             {items.map((todo) => (
+            <Text key={todo.id} style={{ fontSize: 14 }}>• {todo.title}</Text>
+                                ))}
+                        </View>
+                </View>
+            ))}
+        </View>
+
+
+
                 <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
                     <Text style={styles.signOutText}>Sign Out</Text>
                 </TouchableOpacity>
