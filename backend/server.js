@@ -19,6 +19,7 @@ const db = new sqlite3.Database("./users.db", (err) => {
 
 const runQuery = promisify(db.run.bind(db));
 const getQuery = promisify(db.get.bind(db));
+const allQuery = promisify(db.all.bind(db));
 
 db.run(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,6 +28,59 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
     phone TEXT UNIQUE,
     password TEXT
 )`);
+
+db.run(`
+    CREATE TABLE IF NOT EXISTS todos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT,
+      content TEXT,
+      category TEXT,
+      date TEXT
+    )
+  `);
+
+  // ✅ POST - Add new To-Do
+app.post("/todos", async (req, res) => {
+    const { title, content, category, date } = req.body;
+  
+    if (!title || !content || !category || !date) {
+      return res.status(400).send({ message: "All fields are required" });
+    }
+  
+    try {
+      await runQuery(
+        `INSERT INTO todos (title, content, category, date) VALUES (?, ?, ?, ?)`,
+        [title, content, category, date]
+      );
+      res.send({ message: "To-Do added successfully" });
+    } catch (error) {
+      console.error("Error in /todos (POST):", error);
+      res.status(500).send({ message: "Internal server error" });
+    }
+  });
+  
+  // ✅ GET - Fetch all To-Dos
+  app.get("/todos", async (req, res) => {
+    try {
+      const todos = await allQuery(`SELECT * FROM todos ORDER BY id DESC`);
+      res.send(todos);
+    } catch (error) {
+      console.error("Error in /todos (GET):", error);
+      res.status(500).send({ message: "Internal server error" });
+    }
+  });
+  
+  // ✅ DELETE - Remove To-Do by ID
+  app.delete("/todos/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      await runQuery(`DELETE FROM todos WHERE id = ?`, [id]);
+      res.send({ message: "To-Do deleted successfully" });
+    } catch (error) {
+      console.error("Error in /todos/:id (DELETE):", error);
+      res.status(500).send({ message: "Internal server error" });
+    }
+  });
 
 app.post("/login", async (req, res) => {
     const { email, phone, password } = req.body;

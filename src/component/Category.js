@@ -16,6 +16,7 @@ const Category = ({ category, data, deleteItem, toggleFavorite, favoriteItems, r
             <View style={styles.cardContent}>
               <Text style={styles.text}>{item.title}</Text>
               <Text style={styles.content}>{item.content}</Text>
+              <Text style={styles.dateText}>วันที่: {item.date}</Text>
             </View>
       
             {renderFavoriteIcon(item.id)} 
@@ -97,6 +98,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     right: 10, // วางไอคอนดาวที่มุมขวาบนของการ์ด
+  },
+  dateText: {
+    fontSize: 16,
+    color: '#888',
+    marginTop: 5,
   },
 });
 

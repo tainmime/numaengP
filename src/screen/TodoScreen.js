@@ -1,75 +1,81 @@
 import React, { useState, useEffect } from "react";
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, Modal, ImageBackground } from "react-native";
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Modal, ImageBackground, FlatList } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign"; 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Category from "../component/Category";
 
-const STORAGE_KEY = "@cards_data";
-
-const HomeScreen = () => {
-  const [user, setUser] = useState([]);
+const TodoScreen = () => {
+  const [todos, setTodos] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
+  const [date, setDate] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [favoriteItems, setFavoriteItems] = useState([]); 
+  const [favoriteItems, setFavoriteItems] = useState([]);
 
-  const loadCards = async () => {
+  const fetchTodos = async () => {
     try {
-      const storedCards = await AsyncStorage.getItem(STORAGE_KEY);
-      if (storedCards) {
-        setUser(JSON.parse(storedCards));
-      }
+      const response = await fetch("http://26.231.42.50:5001/todos");
+      const todos = await response.json();
+      setTodos(todos);
     } catch (error) {
-      console.error("Failed to load data:", error);
+      console.error("Failed to fetch todos:", error);
     }
   };
 
   useEffect(() => {
-    loadCards();
+    fetchTodos();
   }, []);
 
   const addMsg = async () => {
-    if (!title || !content || !category) return;
+    if (!title || !content || !category || !date) return;
 
     const newMsg = {
-      id: Date.now().toString(),
       title,
       content,
       category,
+      date,
     };
 
-    const updatedCards = [newMsg, ...user];
-    setUser(updatedCards);
-    setTitle("");
-    setContent("");
-    setCategory("");
-    setIsModalVisible(false);
-
     try {
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedCards));
+      await fetch("http://26.231.42.50:5001/todos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newMsg),
+      });
+      fetchTodos();
+      setTitle("");
+      setContent("");
+      setCategory("");
+      setDate("");
+      setIsModalVisible(false);
     } catch (error) {
       console.log("Error:", error);
     }
   };
 
   const deleteItem = async (id) => {
-    const updatedCards = user.filter((item) => item.id !== id);
-    setUser(updatedCards);
     try {
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedCards));
+      await fetch(`http://26.231.42.50:5001/todos/${id}`, {
+        method: "DELETE",
+      });
+      fetchTodos();
     } catch (error) {
       console.log("Error:", error);
     }
   };
+  
+  const groupedData = Array.isArray(todos)
+  ? todos.reduce((acc, item) => {
+      if (!acc[item.category]) {
+        acc[item.category] = [];
+      }
+      acc[item.category].push(item);
+      return acc;
+    }, {})
+  : {};
 
-  const groupedData = user.reduce((acc, item) => {
-    if (!acc[item.category]) {
-      acc[item.category] = [];
-    }
-    acc[item.category].push(item);
-    return acc;
-  }, {});
 
   const toggleFavorite = (id) => {
     setFavoriteItems((prevFavorites) =>
@@ -93,7 +99,6 @@ const HomeScreen = () => {
       </View>
     );
   };
-  
 
   return (
     <ImageBackground 
@@ -113,6 +118,8 @@ const HomeScreen = () => {
             <TextInput style={styles.input} value={title} onChangeText={setTitle} placeholder="Title" />
             <TextInput style={styles.input} value={content} onChangeText={setContent} placeholder="Content" />
             <TextInput style={styles.input} value={category} onChangeText={setCategory} placeholder="Category" />
+            <TextInput style={styles.input} value={date} onChangeText={setDate} placeholder="Date (วว/ดด/ปปปป)" />
+
             <View style={styles.modalButtons}>
               <TouchableOpacity style={styles.submitButton} onPress={addMsg}>
                 <Text style={styles.submitButtonText}>Submit</Text>
@@ -133,7 +140,7 @@ const HomeScreen = () => {
           deleteItem={deleteItem}
           favoriteItems={favoriteItems}
           toggleFavorite={toggleFavorite}
-          renderFavoriteIcon={renderFavoriteIcon} // ส่งฟังก์ชันนี้ไปที่ Category
+          renderFavoriteIcon={renderFavoriteIcon}
         />
       ))}
 
@@ -143,7 +150,7 @@ const HomeScreen = () => {
       </TouchableOpacity>
     </ImageBackground>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -162,7 +169,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: "absolute",
-    bottom: 20, // ปรับค่า bottom ที่นี่เพื่อเพิ่มระยะห่างจากขอบล่าง
+    bottom: 20,
     left: 20,
     flexDirection: "row",
     alignItems: "center",
@@ -170,7 +177,7 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 50,
     elevation: 10,
-    marginBottom: 30, // เพิ่มระยะห่างจากขอบล่าง 30 หน่วย
+    marginBottom: 30,
   },
   addButtonText: {
     fontSize: 15,
@@ -238,4 +245,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default TodoScreen;
