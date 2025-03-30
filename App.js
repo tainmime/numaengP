@@ -11,7 +11,7 @@ import RegisPhone from "./src/screen/RegisPhone";
 import LoginSceen from "./src/screen/LoginSceen";
 import ProfileScreen from "./src/screen/ProfileScreen";
 import TodoScreen from "./src/screen/TodoScreen";
-import { Ionicons } from '@expo/vector-icons'; // ใช้ไอคอนจาก expo vector-icons
+import { Ionicons } from '@expo/vector-icons';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -43,10 +43,10 @@ function BottomTabNavigator() {
     <Tab.Navigator
       initialRouteName="Profile"
       screenOptions={{
-        tabBarActiveTintColor: '#D10000', // เปลี่ยนสี active tab ตาม dark mode
-        tabBarInactiveTintColor:'#D10000', // สีของ inactive tab
+        tabBarActiveTintColor: '#D10000',
+        tabBarInactiveTintColor:'#D10000',
         tabBarStyle: {
-          backgroundColor:'#fff', // เปลี่ยนสีพื้นหลังของแท็บ
+          backgroundColor:'#fff',
         },
       }}
     >
@@ -57,7 +57,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" color={color} size={size} />
           ),
-          headerShown: false, // ปิด header สำหรับหน้าจอนี้
+          headerShown: false,
         }}
       />
       <Tab.Screen
@@ -67,7 +67,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar" color={color} size={size} />
           ),
-          headerShown: false, // ปิด header สำหรับหน้าจอนี้
+          headerShown: false,
         }}
       />
       <Tab.Screen
@@ -75,9 +75,9 @@ function BottomTabNavigator() {
         component={TodoScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="logo-game-controller-b" color={color} size={size} />
+            <Ionicons name="game-controller" color={color} size={size} />
           ),
-          headerShown: false, // ปิด header สำหรับหน้าจอนี้
+          headerShown: false,
         }}
       />
     </Tab.Navigator>

@@ -33,7 +33,7 @@ export const loginUser = async (identifier, password) => {
 
         const response = await axios.post(`${API_URL}/login`, payload);
 
-        console.log("API Response:", response.data); // ดูรายละเอียดของ API Response
+        console.log("API Response:", response.data);
 
         return response.data;
     } catch (error) {
