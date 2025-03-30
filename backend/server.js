@@ -29,14 +29,15 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
 )`);
 
 app.post("/login", async (req, res) => {
-    const { phone, password } = req.body;
+    const { email, phone, password } = req.body;
 
     try {
-        if (!phone || !password) {
-            return res.status(400).send({ message: "Phone and password are required" });
+        if ((!email && !phone) || !password) {
+            return res.status(400).send({ message: "Email/Phone and password are required" });
         }
 
-        const user = await getQuery(`SELECT * FROM users WHERE phone = ?`, [phone]);
+        // ใช้ email หรือ phone เพื่อตรวจสอบผู้ใช้
+        const user = await getQuery(`SELECT * FROM users WHERE email = ? OR phone = ?`, [email, phone]);
 
         if (!user) return res.status(400).send({ message: "User not found" });
 
@@ -59,19 +60,23 @@ app.post("/login", async (req, res) => {
     }
 });
 
+
 app.post("/register", async (req, res) => {
     try {
-        console.log("POST request received:", req.body);  // แสดงข้อมูลที่ได้รับจาก Client
+        console.log("POST request received:", req.body);
 
         const { fullname, email, phone, password } = req.body;
         if (!fullname || !password || (!email && !phone)) {
             return res.status(400).send({ message: "All fields are required" });
         }
 
-        // การเข้ารหัสรหัสผ่าน
+        const userExists = await getQuery(`SELECT * FROM users WHERE email = ? OR phone = ?`, [email, phone]);
+        if (userExists) {
+            return res.status(400).send({ message: "User already exists" });
+        }
+
         const encryptedPassword = await bcrypt.hash(password, 10);
 
-        // การเพิ่มข้อมูลไปยังฐานข้อมูล
         await runQuery(
             `INSERT INTO users (fullname, email, phone, password) VALUES (?, ?, ?, ?)`,
             [fullname, email, phone, encryptedPassword]
@@ -80,7 +85,7 @@ app.post("/register", async (req, res) => {
         res.send({ message: "User registered successfully" });
 
     } catch (error) {
-        console.error("Error in /register:", error);  // แสดงข้อผิดพลาดที่เกิดขึ้นในฝั่งเซิร์ฟเวอร์
+        console.error("Error in /register:", error);
         res.status(400).send({ message: "User already exists or invalid data" });
     }
 });

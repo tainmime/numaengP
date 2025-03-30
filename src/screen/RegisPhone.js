@@ -138,9 +138,9 @@ const RegisPhone = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity 
                 style={[styles.button2, { backgroundColor: isDarkMode ? "#444" : "white" }]} 
-                onPress={() => navigation.navigate("Register")}
+                onPress={() => navigation.navigate("Login")}
             > 
-                <Text style={[styles.buttonText2 , { color: isDarkMode ? "#fff" : "#D10000" }]}>Sign in</Text>
+                <Text style={[styles.buttonText2 , { color: isDarkMode ? "#fff" : "#D10000" }]}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.switchContainer} onPress={toggleDarkMode}>
                             <Animated.View 

@@ -46,10 +46,9 @@ const RegisterScreen = ({ navigation }) => {
         outputRange: [2, 28],
     });
     async function onGoogleButtonPress() {
-        
         // Check if your device supports Google Play
         await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-        
+        await navigation.replace("Profile");
         // Get the users ID token
         const signInResult = await GoogleSignin.signIn();
         
@@ -65,7 +64,7 @@ const RegisterScreen = ({ navigation }) => {
         console.log('Google ID Token:', idToken);
         // Create a Google credential with the token
         const googleCredential = auth.GoogleAuthProvider.credential(signInResult.data.idToken);
-      
+
         // Sign-in the user with the credential
         return auth().signInWithCredential(googleCredential);
         console.log('Error:', error);

@@ -7,6 +7,8 @@ import HomeScreen from './src/screen/HomeScreen';
 import CalendarScreen from "./src/screen/calenda";
 import RegisterScreen from "./src/screen/RegisterScreen";
 import RegisPhone from "./src/screen/RegisPhone";
+import LoginSceen from "./src/screen/LoginSceen";
+import ProfileScreen from "./src/screen/ProfileScreen";
 
 const Stack = createStackNavigator();
 
@@ -20,6 +22,8 @@ export default function App() {
           <Stack.Screen name="calenda" component={CalendarScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="RegisPhone" component={RegisPhone} options={{ headerShown: false }}/>
+          <Stack.Screen name="Login" component={LoginSceen} options={{ headerShown: false }}/>
+          <Stack.Screen name="Profile" component={ProfileScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
     </>

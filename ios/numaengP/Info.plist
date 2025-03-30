@@ -72,3 +72,7 @@
     <false/>
   </dict>
 </plist>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>แอปนี้ต้องการเข้าถึงรูปภาพของคุณเพื่อเปลี่ยนโปรไฟล์</string>
+<key>NSPhotoLibraryAddUsageDescription</key>
+<string>แอปต้องการสิทธิ์เพิ่มรูปภาพลงในแกลเลอรี</string>
