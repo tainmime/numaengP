@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, FlatList, Modal } from "react-native";
-import AntDesign from "@expo/vector-icons/AntDesign";
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Modal } from "react-native";
+import AntDesign from "@expo/vector-icons/AntDesign"; 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import EditTodo from "../components/EditTodo";
 import Category from "../components/Category";
 
 const STORAGE_KEY = "@cards_data";
 
-const TodoScreen = () => {
+const HomeScreen = () => {
   const [user, setUser] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [favoriteItems, setFavoriteItems] = useState([]); 
 
   const loadCards = async () => {
     try {
@@ -63,7 +63,6 @@ const TodoScreen = () => {
     }
   };
 
-  // จัดกลุ่มข้อมูลตามหมวดหมู่
   const groupedData = user.reduce((acc, item) => {
     if (!acc[item.category]) {
       acc[item.category] = [];
@@ -72,13 +71,33 @@ const TodoScreen = () => {
     return acc;
   }, {});
 
+  const toggleFavorite = (id) => {
+    setFavoriteItems((prevFavorites) =>
+      prevFavorites.includes(id)
+        ? prevFavorites.filter((favId) => favId !== id)
+        : [...prevFavorites, id]
+    );
+  };
+
+  const renderFavoriteIcon = (id) => {
+    if (!favoriteItems.includes(id)) {
+      return null;  
+    }
+    return (
+      <View style={styles.favoriteIcon}>
+        <AntDesign
+          name="heart"
+          size={24}
+          color="red" 
+        />
+      </View>
+    );
+  };
+  
+
   return (
     <View style={styles.container}>
-        <Text style={styles.header}>To-Do List</Text>
-      <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
-      <Text style={styles.addButton}>New List</Text>
-        <AntDesign name="pluscircle" size={25} color="red" />
-      </TouchableOpacity>
+      <Text style={styles.header}>To-Do List</Text>
 
       <Modal
         visible={isModalVisible}
@@ -88,33 +107,38 @@ const TodoScreen = () => {
       >
         <View style={styles.modalBackground}>
           <View style={styles.modalContainer}>
-            <TextInput style={styles.input} value={title} onChangeText={setTitle} placeholder="Enter Title" />
-            <TextInput style={styles.input} value={content} onChangeText={setContent} placeholder="Enter Content" />
-            <TextInput style={styles.input} value={category} onChangeText={setCategory} placeholder="Enter Category" />
+            <TextInput style={styles.input} value={title} onChangeText={setTitle} placeholder="Title" />
+            <TextInput style={styles.input} value={content} onChangeText={setContent} placeholder="Content" />
+            <TextInput style={styles.input} value={category} onChangeText={setCategory} placeholder="Category" />
 
             <View style={styles.modalButtons}>
               <TouchableOpacity style={styles.submitButton} onPress={addMsg}>
                 <Text style={styles.submitButtonText}>Submit</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.closeButton} onPress={() => setIsModalVisible(false)}>
-                <Text style={styles.closeButtonText}>Close</Text>
+                <Text style={styles.closeButtonText}>Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </Modal>
 
-    
-      <EditTodo listData={user} deleteItem={deleteItem} />
+      {Object.keys(groupedData).map((category) => (
+        <Category
+          key={category}
+          category={category}
+          data={groupedData[category]}
+          deleteItem={deleteItem}
+          favoriteItems={favoriteItems}
+          toggleFavorite={toggleFavorite}
+          renderFavoriteIcon={renderFavoriteIcon} // ส่งฟังก์ชันนี้ไปที่ Category
+        />
+      ))}
 
-  
-      <FlatList
-        data={Object.keys(groupedData)}
-        keyExtractor={(category) => category}
-        renderItem={({ item: category }) => (
-          <Category category={category} data={groupedData[category]} />
-        )}
-      />
+      <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
+        <Text style={styles.addButtonText}>New List</Text>
+        <AntDesign name="pluscircle" size={30} color="red" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -127,15 +151,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   header: {
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: "bold",
     marginBottom: 10,
+    color: "red",
   },
   addButton: {
     position: "absolute",
-    top: 20,
-    right: 20,
-    marginBottom: 10,
+    bottom: 20,
+    left: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 50,
+    elevation: 5,
+  },
+  addButtonText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginRight: 8,
+    color: "red",
   },
   modalContainer: {
     backgroundColor: "#fff",
@@ -167,7 +203,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   submitButton: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "red",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -180,7 +216,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   closeButton: {
-    backgroundColor: "#FF6347",
+    backgroundColor: "red",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -192,6 +228,11 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
   },
+  favoriteIcon: {
+    position: "absolute",
+    right: 10,
+    top: 10,
+  },
 });
 
-export default TodoScreen;
+export default HomeScreen;
