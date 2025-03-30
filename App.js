@@ -18,11 +18,16 @@ export default function App() {
     <>
       <StatusBar hidden={true} />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="calenda" screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="calenda" component={CalendarScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="RegisPhone" component={RegisPhone} options={{ headerShown: true }}/>
+          <Stack.Screen name="Login" component={LoginSceen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Todo" component={TodoScreen} />
+          
+          
         </Stack.Navigator>
       </NavigationContainer>
     </>
