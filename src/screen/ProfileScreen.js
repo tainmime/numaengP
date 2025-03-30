@@ -3,9 +3,6 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Animated, Image
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { launchImageLibrary } from "react-native-image-picker";
 
-
-
-
 const ProfileScreen = ({ navigation }) => {
     const [userData, setUserData] = useState(null);
     const [image, setImage] = useState(null);
