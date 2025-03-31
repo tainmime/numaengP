@@ -161,10 +161,10 @@ const ProfileScreen = ({ navigation }) => {
             ))}
         </View>
 
-
-
-                <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
-                    <Text style={styles.signOutText}>Sign Out</Text>
+                <TouchableOpacity 
+                    style={[styles.button2, { backgroundColor: isDarkMode ? "#444" : "#d32f2f" }]} 
+                    onPress={handleSignOut}>
+                    <Text style={styles.buttonText2}>Sign Out</Text>
                 </TouchableOpacity>
             </View>
             <TouchableOpacity style={styles.switchContainer} onPress={toggleDarkMode}>
@@ -260,11 +260,28 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginTop: 10,
     },
-    signOutText: {
-        color: "#fff",
-        fontSize: 16,
-        fontWeight: 'bold',
+    buttonText2: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#ffffff",
+        textAlign: "center",
     },
+    button2: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center", 
+        paddingVertical: 12,
+        paddingHorizontal: 30,
+        borderRadius: 15,
+        elevation: 5,
+        marginTop: 100,
+        width: 300,
+        shadowColor: "#000",
+        shadowOffset: { width: 2, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+    },
+
 });
 
 export default ProfileScreen;

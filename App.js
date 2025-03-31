@@ -80,7 +80,7 @@ function BottomTabNavigator() {
         component={TodoScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="game-controller" color={color} size={size} />
+            <Ionicons name="list" color={color} size={size} />
           ),
           headerShown: false,
         }}
