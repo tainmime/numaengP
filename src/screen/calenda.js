@@ -10,8 +10,26 @@ const CalendarScreen = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [activeButton, setActiveButton] = useState('month'); // month or week
+  const [activeButton, setActiveButton] = useState('month'); 
 
+  const getLuckyColor = (dateString) => {
+    const [day, month, year] = dateString.split('/');
+    const date = new Date(`${year}-${month}-${day}`);
+    const dayOfWeek = date.getDay(); 
+  
+    const luckyColors = {
+      0: "แดง (Sunday)",
+      1: "เหลือง (Monday)",
+      2: "ชมพู (Tuesday)",
+      3: "เขียว (Wednesday)",
+      4: "ส้ม (Thursday)",
+      5: "ฟ้า (Friday)",
+      6: "ม่วง (Saturday)",
+    };
+  
+    return luckyColors[dayOfWeek];
+  };
+  
   const screenWidth = Dimensions.get('window').width;
       const [isDarkMode, setIsDarkMode] = useState(false);
       const [animatedValue] = useState(new Animated.Value(0));
@@ -188,11 +206,17 @@ const CalendarScreen = () => {
        <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           {selectedDay !== null && (
+          <>
           <DayCard 
-          date={formatDate(selectedDay, currentDate.getMonth(), currentDate.getFullYear())}
-          todos={todos}
-        />
-      )}
+            date={formatDate(selectedDay, currentDate.getMonth(), currentDate.getFullYear())}
+            todos={todos}
+          />
+          <Text style={{ marginTop: 10, fontSize: 16, color: '#d10000', textAlign: 'center' }}>
+           สีมงคลประจำวัน: {getLuckyColor(formatDate(selectedDay, currentDate.getMonth(), currentDate.getFullYear()))}
+          </Text>
+      </>
+    )}
+
       <TouchableOpacity onPress={() => setModalVisible(false)}>
         <Text style={styles.closeBtn}>Close</Text>
       </TouchableOpacity>

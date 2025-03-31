@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 2,
-    padding: 15
+    padding: 15,
   },
   cardName: { 
     fontSize: 24,
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 40,
     borderRadius: 30,
-    marginTop: 20,
+    marginTop: 120,
     minWidth: 220,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },
