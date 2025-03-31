@@ -141,17 +141,17 @@ const ProfileScreen = ({ navigation }) => {
                 <View style={styles.textContainer}>
                     <Text style={styles.name}>{userData.fullname}</Text>
                     <Text style={styles.email}>{userData.email}</Text>
-                    <TouchableOpacity style={[styles.button,{ backgroundColor: isDarkMode ? "#444" : "white" }]} onPress={handleImagePick}>
+                    <TouchableOpacity style={[styles.button,{ backgroundColor: isDarkMode ? "#b7b7b7" : "white" }]} onPress={handleImagePick}>
                         <Text style={[styles.buttonText ,{ color: isDarkMode ? "#fff" : "#000" }]}>Edit Profile</Text>
                     </TouchableOpacity>
                 </View>
             </View>
-            <View style={[styles.innerContainer,{ backgroundColor: isDarkMode ? "#444" : "white" }]}>
+            <View style={[styles.innerContainer,{ backgroundColor: isDarkMode ? "#b7b7b7" : "white" }]}>
             <View style={{ padding: 20, width: '100%', alignItems: 'flex-start' }}>
             <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10, }}>To-Do by Date</Text>
             {Object.entries(groupedByDate).map(([date, items]) => (
                 <View key={date} style={{ marginBottom: 15 }}>
-                    <Text style={{ fontSize: 16, fontWeight: "600", color: "red" }}>{date}</Text>
+                    <Text style={{ fontSize: 16, fontWeight: "600", color: isDarkMode ? "white" : "red"}}>{date}</Text>
                 <View style={{ marginLeft: 10 }}>
              {items.map((todo) => (
             <Text key={todo.id} style={{ fontSize: 14 }}>• {todo.title}</Text>

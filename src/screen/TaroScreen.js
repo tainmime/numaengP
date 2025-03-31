@@ -12,8 +12,8 @@ const TarotScreen = () => {
 
   // รับขนาดหน้าจอ
     const { width } = Dimensions.get('window');
-    const cardWidth = width * 0.8;
-    const cardHeight = cardWidth * 1.6;
+    const cardWidth = width * 0.87;
+    const cardHeight = cardWidth * 1.2;
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [animatedValue] = useState(new Animated.Value(0));
 
@@ -195,24 +195,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cardImageContainer: {
-    borderRadius: 15,
-    backgroundColor: 'white',
-    borderWidth: 4,
-    borderColor: "#fff",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 3,
+    backgroundColor: 'transparent',
     marginBottom: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
   cardImage: { 
     resizeMode: "contain",
-    borderRadius: 15,
-    width: 50,
-    height: 50,
   },
   reversedCard: {
     transform: [{ rotate: '180deg' }],
