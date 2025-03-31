@@ -7,10 +7,9 @@ const TarotScreen = () => {
     const [isReversed, setIsReversed] = useState(false);
     const [showCard, setShowCard] = useState(false);
 
-  // ใช้ require สำหรับรูปไพ่ด้านหลัง
+
     const cardBackImage = require('../../assets/card_back.png');
 
-  // รับขนาดหน้าจอ
     const { width } = Dimensions.get('window');
     const cardWidth = width * 0.8;
     const cardHeight = cardWidth * 1.6;
@@ -90,7 +89,6 @@ const TarotScreen = () => {
         <View style={styles.container}>
             <Text style={[styles.title,{color: isDarkMode ? "#fff" : "#000" }] }>Tarot</Text>
 
-          {/* พื้นที่แสดงไพ่ */}
             <View style={styles.cardArea}>
                 {loading ? (
                 <ActivityIndicator size="large" color="#FF3333" />
@@ -131,7 +129,6 @@ const TarotScreen = () => {
             )}
           </View>
 
-          {/* ปุ่ม Random */}
           <TouchableOpacity 
             style={styles.randomButton} 
             onPress={fetchTarotCard}

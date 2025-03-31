@@ -10,7 +10,7 @@ const CalendarScreen = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [activeButton, setActiveButton] = useState('month'); // month or week
+  const [activeButton, setActiveButton] = useState('month');
 
   const screenWidth = Dimensions.get('window').width;
       const [isDarkMode, setIsDarkMode] = useState(false);
@@ -46,7 +46,7 @@ const CalendarScreen = () => {
       });
   const fetchTodos = async () => {
     try {
-      const response = await fetch("http://26.231.42.50:5001/todos");
+      const response = await fetch("http://10.0.2.2:5001/todos");
       const todosData = await response.json();
       setTodos(todosData);
     } catch (error) {
@@ -78,7 +78,7 @@ const CalendarScreen = () => {
 
   const getDaysInWeek = (date) => {
     const startOfWeek = new Date(date);
-    startOfWeek.setDate(date.getDate() - date.getDay()); // ไปยังวันเริ่มต้นของสัปดาห์ (วันอาทิตย์)
+    startOfWeek.setDate(date.getDate() - date.getDay());
 
     const days = [];
     for (let i = 0; i < 7; i++) {
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     width: '100%',
     paddingVertical: 10,
-    backgroundColor: 'transparent',  // เปลี่ยนจาก 'white' เป็น 'transparent'
+    backgroundColor: 'transparent',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,

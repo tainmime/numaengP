@@ -14,7 +14,7 @@ const TodoScreen = () => {
 
   const fetchTodos = async () => {
     try {
-      const response = await fetch("http://26.231.42.50:5001/todos");
+      const response = await fetch("http://10.0.2.2:5001/todos");
       const todos = await response.json();
       setTodos(todos);
     } catch (error) {
@@ -37,7 +37,7 @@ const TodoScreen = () => {
     };
 
     try {
-      await fetch("http://26.231.42.50:5001/todos", {
+      await fetch("http://10.0.2.2:5001/todos", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +57,7 @@ const TodoScreen = () => {
 
   const deleteItem = async (id) => {
     try {
-      await fetch(`http://26.231.42.50:5001/todos/${id}`, {
+      await fetch(`http://10.0.2.2:5001/todos/${id}`, {
         method: "DELETE",
       });
       fetchTodos();

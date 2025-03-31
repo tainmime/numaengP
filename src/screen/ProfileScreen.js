@@ -32,7 +32,7 @@ const ProfileScreen = ({ navigation }) => {
     useEffect(() => {
      const fetchTodos = async () => {
         try {
-        const response = await fetch("http://26.231.42.50:5001/todos");
+        const response = await fetch("http://10.0.2.2:5001/todos");
         const data = await response.json();
         setTodos(data);
         } catch (error) {

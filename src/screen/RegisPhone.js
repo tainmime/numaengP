@@ -41,7 +41,7 @@ const RegisPhone = ({ navigation }) => {
             Alert.alert("Register Success", "Registration successful");
             navigation.navigate("Login");
         } catch (error) {
-            console.error("Register Failed:", error);  // เพิ่มการ log ข้อความของข้อผิดพลาด
+            console.error("Register Failed:", error);
             Alert.alert("Register Failed", error.message);
         }
     };
