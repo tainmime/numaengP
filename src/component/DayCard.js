@@ -3,24 +3,22 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 export default function DayCard({ date, todos }) {
-  const filteredTodos = todos?.filter((item) => item.date === date);
+  const dayTodos = todos?.filter(todo => todo.date === date);
 
   return (
     <View style={styles.card}>
-      <Text style={styles.dateText}>To-Dos for {date}</Text>
-      {filteredTodos && filteredTodos.length > 0 ? (
-        filteredTodos.map((todo) => (
-          <View key={todo.id} style={{ marginBottom: 10 }}>
-            <Text style={styles.todoTitle}>{todo.title}</Text>
-            <Text>{todo.content}</Text>
-          </View>
+      <Text style={styles.dateText}>Details for {date}</Text>
+      {dayTodos && dayTodos.length > 0 ? (
+        dayTodos.map(todo => (
+          <Text key={todo.id} style={styles.todoText}>• {todo.title}</Text>
         ))
       ) : (
-        <Text style={styles.todoText}>ไม่มีข้อมูล To-Do สำหรับวันนี้</Text>
+        <Text style={styles.todoText}>No to-do for this day.</Text>
       )}
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   card: {
