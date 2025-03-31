@@ -88,7 +88,7 @@ const TarotScreen = () => {
             showsVerticalScrollIndicator={false}
         >
         <View style={styles.container}>
-            <Text style={styles.title}>Tarot</Text>
+            <Text style={[styles.title,{color: isDarkMode ? "#fff" : "#000" }] }>Tarot</Text>
 
           {/* พื้นที่แสดงไพ่ */}
             <View style={styles.cardArea}>
