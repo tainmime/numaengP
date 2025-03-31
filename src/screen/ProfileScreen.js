@@ -148,7 +148,7 @@ const ProfileScreen = ({ navigation }) => {
             </View>
             <View style={[styles.innerContainer,{ backgroundColor: isDarkMode ? "#444" : "white" }]}>
             <View style={{ padding: 20, width: '100%', alignItems: 'flex-start' }}>
-            <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>To-Do by Date</Text>
+            <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10, }}>To-Do by Date</Text>
             {Object.entries(groupedByDate).map(([date, items]) => (
                 <View key={date} style={{ marginBottom: 15 }}>
                     <Text style={{ fontSize: 16, fontWeight: "600", color: "red" }}>{date}</Text>
@@ -162,9 +162,9 @@ const ProfileScreen = ({ navigation }) => {
         </View>
 
                 <TouchableOpacity 
-                    style={[styles.button2, { backgroundColor: isDarkMode ? "#444" : "#d32f2f" }]} 
+                    style={[styles.button2, { backgroundColor: isDarkMode ? "#fff" : "#d32f2f" }]} 
                     onPress={handleSignOut}>
-                    <Text style={styles.buttonText2}>Sign Out</Text>
+                    <Text style={[styles.buttonText2,{ color: isDarkMode ? "#000" : "#fff" }]}>Sign Out</Text>
                 </TouchableOpacity>
             </View>
             <TouchableOpacity style={styles.switchContainer} onPress={toggleDarkMode}>

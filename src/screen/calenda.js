@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, Modal, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, Modal, ImageBackground, Animated } from 'react-native';
 import DayCard from '../component/DayCard';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
@@ -13,7 +13,37 @@ const CalendarScreen = () => {
   const [activeButton, setActiveButton] = useState('month'); // month or week
 
   const screenWidth = Dimensions.get('window').width;
+      const [isDarkMode, setIsDarkMode] = useState(false);
+      const [animatedValue] = useState(new Animated.Value(0));
   
+      useEffect(() => {
+          const loadTheme = async () => {
+              const savedTheme = await AsyncStorage.getItem('darkMode');
+              if (savedTheme !== null) {
+                  setIsDarkMode(savedTheme === 'true');
+              }
+          };
+          loadTheme();
+      }, []);
+  
+      useEffect(() => {
+          Animated.timing(animatedValue, {
+              toValue: isDarkMode ? 1 : 0,
+              duration: 300,
+              useNativeDriver: false,
+          }).start();
+      }, [isDarkMode]);
+  
+      const toggleDarkMode = async () => {
+          const newMode = !isDarkMode;
+          setIsDarkMode(newMode);
+          await AsyncStorage.setItem('darkMode', newMode.toString());
+      };
+  
+      const switchTranslateX = animatedValue.interpolate({
+          inputRange: [0, 1],
+          outputRange: [2, 28],
+      });
   const fetchTodos = async () => {
     try {
       const response = await fetch("http://26.231.42.50:5001/todos");
@@ -81,7 +111,10 @@ const CalendarScreen = () => {
   };
 
   return (
-    <ImageBackground source={require('../../assets/calendaB.png')} style={styles.container}>
+        <ImageBackground 
+            source={isDarkMode ? require('../../assets/CalendarD.png') : require('../../assets/calendaB.png')} 
+            style={styles.container}
+        >
       <View style={styles.contentContainer}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -166,6 +199,14 @@ const CalendarScreen = () => {
     </View>
   </View>
 </Modal>
+            <TouchableOpacity style={styles.switchContainer} onPress={toggleDarkMode}>
+                <Animated.View 
+                    style={[
+                        styles.switchBall, 
+                        { transform: [{ translateX: switchTranslateX }] }
+                    ]}
+                />
+            </TouchableOpacity>
 
     </ImageBackground>
   );
@@ -273,7 +314,28 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#555',
     marginTop: 2,
-  },  
+  },
+  switchContainer: {
+    position: "absolute",
+    top: 50,
+    right: 20,
+    width: 45,
+    height: 20,
+    borderRadius: 15,
+    backgroundColor: "#ddd",
+    justifyContent: "center",
+    paddingHorizontal: 2,
+    marginRight: 15,
+},
+switchBall: {
+    width: 16,
+    height: 16,
+    borderRadius: 13,
+    backgroundColor: "#fff",
+    position: "absolute",
+    top: 2,
+
+}  
 });
 
 export default CalendarScreen;
