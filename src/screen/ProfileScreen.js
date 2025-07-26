@@ -2,13 +2,28 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Animated, ImageBackground } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { launchImageLibrary } from "react-native-image-picker";
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 const ProfileScreen = ({ navigation }) => {
     const [userData, setUserData] = useState(null);
     const [image, setImage] = useState(null);
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [animatedValue] = useState(new Animated.Value(0));
-
+    useFocusEffect(
+        useCallback(() => {
+          const fetchTodos = async () => {
+            try {
+              const response = await fetch("http://10.0.2.2:5001/todos");
+              const data = await response.json();
+              setTodos(data);
+            } catch (error) {
+              console.error("Error fetching todos:", error);
+            }
+          };
+          fetchTodos();
+        }, [])
+      );
     useEffect(() => {
         const loadTheme = async () => {
             const savedTheme = await AsyncStorage.getItem('darkMode');

@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, Modal, 
 import DayCard from '../component/DayCard';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 
 const CalendarScreen = () => {
@@ -10,11 +12,7 @@ const CalendarScreen = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-<<<<<<< HEAD
-  const [activeButton, setActiveButton] = useState('month');
-=======
   const [activeButton, setActiveButton] = useState('month'); 
->>>>>>> 701b5e13657d24d9c74239ebb694d00ea6a22212
 
   const getLuckyColor = (dateString) => {
     const [day, month, year] = dateString.split('/');
@@ -87,7 +85,11 @@ const CalendarScreen = () => {
     return `${dd}/${mm}/${year}`;
   };
   
-  
+  useFocusEffect(
+    useCallback(() => {
+      fetchTodos();
+    }, [])
+  );
 
   const getDaysInMonth = (year, month) => {
     const numDays = new Date(year, month + 1, 0).getDate();
